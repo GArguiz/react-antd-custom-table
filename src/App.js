@@ -73,65 +73,6 @@ function App() {
     }
     return <MTable columns={columns} dataSource={data} pagination={false} />;
   }, []);
-  // const columns = [
-  //   {
-  //     title: "Name",
-  //     dataIndex: "name",
-  //     key: "name",
-  //     width: 100,
-  //   },
-  //   {
-  //     title: "Platform",
-  //     dataIndex: "platform",
-  //     width: 100,
-  //     key: "platform",
-  //   },
-  //   {
-  //     title: "Version",
-  //     dataIndex: "version",
-  //     width: 100,
-  //     key: "version",
-  //   },
-  //   {
-  //     title: "Upgraded",
-  //     dataIndex: "upgradeNum",
-  //     key: "upgradeNum",
-  //     width: 100,
-  //   },
-  //   {
-  //     title: "Creator",
-  //     dataIndex: "creator",
-  //     key: "creator",
-  //     width: 100,
-  //   },
-  //   {
-  //     title: "Date",
-  //     dataIndex: "createdAt",
-  //     key: "createdAt",
-  //     width: 100,
-  //   },
-  //   {
-  //     title: "Action",
-  //     key: "operation",
-  //     width: 100,
-  //     render: () => <a>Publish</a>,
-  //   },
-  // ];
-  // const data = useMemo(() => {
-  //   const source = [];
-  //   for (let i = 0; i < 3; ++i) {
-  //     source.push({
-  //       key: i.toString(),
-  //       name: "Screen",
-  //       platform: "iOS",
-  //       version: "10.3.4.5654",
-  //       upgradeNum: 500,
-  //       creator: "Jack",
-  //       createdAt: "2014-12-24 23:12:00",
-  //     });
-  //   }
-  //   return source;
-  // });
 
   const columns = [
     {
@@ -205,6 +146,7 @@ function App() {
           title: "Company Name",
           dataIndex: "companyName",
           key: "companyName",
+          width: 100,
         },
       ],
     },
@@ -231,13 +173,7 @@ function App() {
     });
   }
   const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
+    onChange: (selectedRowKeys, selectedRows) => {},
     getCheckboxProps: (record) => ({
       disabled: record.name === "Disabled User",
       // Column configuration not to be checked

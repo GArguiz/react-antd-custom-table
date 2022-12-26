@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Resizable } from "react-resizable";
 
 const MResizable = React.memo(Resizable);
@@ -27,4 +28,9 @@ const ResizableTitle = (props) => {
   );
 };
 
+ResizableTitle.propTypes = {
+  onResize: PropTypes.func,
+  isExpanded: PropTypes.bool,
+  width: PropTypes.number,
+};
 export default ResizableTitle;
