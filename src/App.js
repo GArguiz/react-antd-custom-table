@@ -186,14 +186,14 @@ function App() {
   return (
     <Content style={{ padding: "10px 50px" }}>
       <MTable
+        withHeader
+        onSavePreferences={onSavePreferences}
         rowSelection={{
           type: "checkbox",
           ...rowSelection,
         }}
         columns={columns}
-        withHeader
         dataSource={data}
-        onSavePreferences={onSavePreferences}
         expandable={{
           expandedRowRender: () => expandedRowRender,
           // defaultExpandedRowKeys: ["0"],

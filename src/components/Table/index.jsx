@@ -20,10 +20,12 @@ import "./table.css";
 const MResizableTitle = React.memo(ResizableTitle);
 
 const TableComponent = ({
-  columns: cols,
   withHeader,
-  dataSource,
   onSavePreferences,
+  headerComponent,
+  columns: cols,
+  hiddenModalComponent,
+  dataSource,
   expandable,
   ...props
 }) => {
@@ -112,31 +114,42 @@ const TableComponent = ({
     }
   }, [isExpanded, columns, onDragEnd]);
 
-  const handleModalOk = (targetKeys, transferData) => {
-    const newColumns = cloneDeep(columns);
-    forEach(transferData, ({ key }) => {
-      if (includes(targetKeys, key)) {
-        set(newColumns, key + ".isHidden", true);
-      } else {
-        set(newColumns, key + ".isHidden", false);
-      }
-    });
-    setColumns(newColumns);
-    setShowModal(false);
-  };
+  const handleModalOk = useCallback(
+    (targetKeys, transferData) => {
+      const newColumns = cloneDeep(columns);
+      forEach(transferData, ({ key }) => {
+        if (includes(targetKeys, key)) {
+          set(newColumns, key + ".isHidden", true);
+        } else {
+          set(newColumns, key + ".isHidden", false);
+        }
+      });
+      setColumns(newColumns);
+      setShowModal(false);
+    },
+    [columns]
+  );
 
   const handleModalCancel = () => {
     setShowModal(false);
   };
 
-  return (
-    <>
-      {withHeader && (
+  const Header = useMemo(
+    () =>
+      headerComponent ? (
+        headerComponent
+      ) : (
         <div className="react-header-editable">
           <SaveOutlined onClick={() => onSavePreferences(mergeColumns)} />
           <EditOutlined onClick={() => setShowModal(!showModal)} />
         </div>
-      )}
+      ),
+    [headerComponent, onSavePreferences, mergeColumns, showModal]
+  );
+
+  return (
+    <>
+      {withHeader && Header}
       <ReactDragListView {...dragProps}>
         <Table
           bordered
