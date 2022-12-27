@@ -17,8 +17,6 @@ const items = [
 
 const MTable = React.memo(Table);
 function App() {
-  const [selectionType, setSelectionType] = useState("checkbox");
-
   const expandedRowRender = useMemo(() => {
     const columns = [
       {
@@ -181,16 +179,21 @@ function App() {
     }),
   };
 
+  const onSavePreferences = (changedColumns) => {
+    console.log("changedColumns", changedColumns);
+  };
+
   return (
     <Content style={{ padding: "10px 50px" }}>
       <MTable
         rowSelection={{
-          type: selectionType,
+          type: "checkbox",
           ...rowSelection,
         }}
         columns={columns}
         withHeader
         dataSource={data}
+        onSavePreferences={onSavePreferences}
         expandable={{
           expandedRowRender: () => expandedRowRender,
           // defaultExpandedRowKeys: ["0"],

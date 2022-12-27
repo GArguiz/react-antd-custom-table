@@ -13,11 +13,3 @@ code {
     monospace;
 }
 
-.react-header-editable {
-  margin-bottom: 10px;
-  background-color: white;
-  border-radius: 5px;
-  padding: 10px;
-  display: flex;
-  flex-flow: row-reverse;
-}

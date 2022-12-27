@@ -2,10 +2,7 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 
 import { Transfer, Modal } from "antd";
-
-import filter from "lodash/filter";
-import isEmpty from "lodash/isEmpty";
-import isUndefined from "lodash/isUndefined";
+import { flatten, getTargetKeys } from "./util";
 
 export default function VisibleColumnModal({
   columns,
@@ -14,22 +11,20 @@ export default function VisibleColumnModal({
   handleCancel,
 }) {
   const [targetKeys, setTargetKeys] = useState(getTargetKeys(columns));
-  const [transferDataSource, settransferDataSource] = useState(
-    flatten(columns)
-  );
+  const [transferDataSource] = useState(flatten(columns));
   const [selectedKeys, setSelectedKeys] = useState([]);
   const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 
-  const onChange = (nextTargetKeys, direction, moveKeys) => {
+  const onChange = (nextTargetKeys) => {
     setTargetKeys(nextTargetKeys);
   };
   return (
     <Modal
       title="Hide Columns"
       open={isModalOpen}
-      onOk={() => handleOK(targetKeys)}
+      onOk={() => handleOK(targetKeys, transferDataSource)}
       onCancel={handleCancel}
     >
       <Transfer
@@ -47,31 +42,6 @@ export default function VisibleColumnModal({
     </Modal>
   );
 }
-
-const flatten = (list = [], parentTitle = "", path = []) => {
-  let transferDataSource = [];
-  list.forEach(({ children, title, ...rest }, index) => {
-    if (!isUndefined(children) && !isEmpty(children)) {
-      const childrenDataSource = flatten(
-        children,
-        parentTitle + "/" + title,
-        path + `[${index}].children`
-      );
-      transferDataSource = [...transferDataSource, ...childrenDataSource];
-    } else {
-      transferDataSource.push({
-        ...rest,
-        title: parentTitle + "/" + title,
-        key: path + `[${index}]`,
-      });
-    }
-  });
-  return transferDataSource;
-};
-
-const getTargetKeys = (columns) => {
-  return filter(columns, (col) => col.isHidden);
-};
 
 VisibleColumnModal.propTypes = {
   columns: PropTypes.array,

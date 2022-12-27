@@ -1,9 +1,10 @@
 import { Table } from "antd";
 import PropTypes from "prop-types";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import ResizableTitle from "../ResizableTitle";
+import ResizableTitle from "./ResizableTitle";
 import ReactDragListView from "react-drag-listview";
 import EditOutlined from "@ant-design/icons/EditOutlined";
+import SaveOutlined from "@ant-design/icons/SaveOutlined";
 import isUndefined from "lodash/isUndefined";
 import isEmpty from "lodash/isEmpty";
 import set from "lodash/set";
@@ -11,7 +12,10 @@ import map from "lodash/map";
 import forEach from "lodash/forEach";
 import compact from "lodash/compact";
 import cloneDeep from "lodash/cloneDeep";
-import VisibleColumnModal from "../VisibleColumnModal";
+import includes from "lodash/includes";
+import VisibleColumnModal from "./VisibleColumnModal";
+
+import "./table.css";
 
 const MResizableTitle = React.memo(ResizableTitle);
 
@@ -19,10 +23,12 @@ const TableComponent = ({
   columns: cols,
   withHeader,
   dataSource,
+  onSavePreferences,
   expandable,
   ...props
 }) => {
   const [columns, setColumns] = useState(cols);
+
   const [isExpanded, setIsExpanded] = useState(
     !isUndefined(expandable) &&
       (!isUndefined(expandable?.defaultExpandAllRows) ||
@@ -91,7 +97,7 @@ const TableComponent = ({
 
       setColumns(data);
     },
-    [columns, expandable, props.rowSelection]
+    [expandable, props.rowSelection, mergeColumns]
   );
 
   useEffect(() => {
@@ -106,10 +112,14 @@ const TableComponent = ({
     }
   }, [isExpanded, columns, onDragEnd]);
 
-  const handleModalOk = (targetKeys) => {
+  const handleModalOk = (targetKeys, transferData) => {
     const newColumns = cloneDeep(columns);
-    forEach(targetKeys, (path) => {
-      set(newColumns, path + ".isHidden", true);
+    forEach(transferData, ({ key }) => {
+      if (includes(targetKeys, key)) {
+        set(newColumns, key + ".isHidden", true);
+      } else {
+        set(newColumns, key + ".isHidden", false);
+      }
     });
     setColumns(newColumns);
     setShowModal(false);
@@ -123,6 +133,7 @@ const TableComponent = ({
     <>
       {withHeader && (
         <div className="react-header-editable">
+          <SaveOutlined onClick={() => onSavePreferences(mergeColumns)} />
           <EditOutlined onClick={() => setShowModal(!showModal)} />
         </div>
       )}
