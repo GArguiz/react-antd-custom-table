@@ -70,14 +70,16 @@ const TableComponent = ({
   );
 
   const mergeColumns = useMemo(() => {
+    const data = cloneDeep(columns);
     return filterColumns(
-      map(columns, (col, index) => ({
+      map(data, (col, index) => ({
         ...col,
         title: isExpanded ? (
           <span className="table-not-sort-order">{col.title}</span>
         ) : (
           <span className="table-sort-order">{col.title}</span>
         ),
+        pathTitle: col.title,
         children: setTitle(col.children, [`${index}`, "children"]),
         onHeaderCell: (column) => ({
           width: column.width,
@@ -89,7 +91,7 @@ const TableComponent = ({
 
   const onDragEnd = useCallback(
     (fromIndex, toIndex) => {
-      const data = cloneDeep(mergeColumns);
+      const data = cloneDeep(columns);
       let indexRest = 0;
       if (!isUndefined(expandable)) indexRest = indexRest + 1;
       if (!isUndefined(props.rowSelection)) indexRest = indexRest + 1;
@@ -124,6 +126,7 @@ const TableComponent = ({
           set(newColumns, key + ".isHidden", false);
         }
       });
+      console.log("newColumns", newColumns);
       setColumns(newColumns);
       setShowModal(false);
     },
@@ -145,6 +148,18 @@ const TableComponent = ({
         </div>
       ),
     [headerComponent, onSavePreferences, mergeColumns, showModal]
+  );
+
+  const Modal = useMemo(
+    () => (
+      <VisibleColumnModal
+        isModalOpen={showModal}
+        columns={columns}
+        handleOK={handleModalOk}
+        handleCancel={handleModalCancel}
+      />
+    ),
+    [columns, showModal, handleModalOk]
   );
 
   return (
@@ -169,12 +184,7 @@ const TableComponent = ({
           }}
         />
       </ReactDragListView>
-      <VisibleColumnModal
-        isModalOpen={showModal}
-        columns={columns}
-        handleOK={handleModalOk}
-        handleCancel={handleModalCancel}
-      />
+      {Modal}
     </>
   );
 };

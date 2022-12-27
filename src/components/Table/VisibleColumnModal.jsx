@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Transfer, Modal } from "antd";
 import { flatten, getTargetKeys } from "./util";
@@ -10,12 +10,19 @@ export default function VisibleColumnModal({
   handleOK,
   handleCancel,
 }) {
+  console.log("first", columns);
   const [targetKeys, setTargetKeys] = useState(getTargetKeys(columns));
-  const [transferDataSource] = useState(flatten(columns));
+  const [transferDataSource, setTransferDataSource] = useState(
+    flatten(columns)
+  );
   const [selectedKeys, setSelectedKeys] = useState([]);
   const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
+
+  useEffect(() => {
+    setTransferDataSource(flatten(columns));
+  }, [columns]);
 
   const onChange = (nextTargetKeys) => {
     setTargetKeys(nextTargetKeys);
