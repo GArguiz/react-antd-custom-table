@@ -101,7 +101,7 @@ const TableComponent = ({
 
       setColumns(data);
     },
-    [expandable, props.rowSelection, mergeColumns]
+    [expandable, props.rowSelection, columns]
   );
 
   useEffect(() => {
@@ -126,7 +126,6 @@ const TableComponent = ({
           set(newColumns, key + ".isHidden", false);
         }
       });
-      console.log("newColumns", newColumns);
       setColumns(newColumns);
       setShowModal(false);
     },
