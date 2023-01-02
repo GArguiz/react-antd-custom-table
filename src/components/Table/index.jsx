@@ -189,19 +189,28 @@ const TableComponent = ({
   );
 };
 
-const filterColumns = (columns) => {
-  return compact(
-    map(columns, ({ isHidden, children, ...rest }) => {
-      if (isHidden) {
-        return null;
-      } else {
-        return {
-          ...rest,
-          children: filterColumns(children),
-        };
-      }
-    })
-  );
+const filterColumns = (columns = []) => {
+  if (isEmpty(columns)) {
+    return [];
+  } else
+    return compact(
+      map(columns, ({ isHidden, children, ...rest }) => {
+        const filteredChildren = filterColumns(children);
+        if (
+          isHidden ||
+          (!isUndefined(children) &&
+            !isEmpty(children) &&
+            isEmpty(filteredChildren))
+        ) {
+          return null;
+        } else {
+          return {
+            ...rest,
+            children: filteredChildren,
+          };
+        }
+      })
+    );
 };
 
 TableComponent.propTypes = {

@@ -10,7 +10,6 @@ export default function VisibleColumnModal({
   handleOK,
   handleCancel,
 }) {
-  console.log("first", columns);
   const [targetKeys, setTargetKeys] = useState(getTargetKeys(columns));
   const [transferDataSource, setTransferDataSource] = useState(
     flatten(columns)

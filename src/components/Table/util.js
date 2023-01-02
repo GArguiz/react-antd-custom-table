@@ -26,3 +26,8 @@ export const flatten = (list = [], parentTitle = "", path = []) => {
 export const getTargetKeys = (columns) => {
   return filter(columns, (col) => col.isHidden);
 };
+
+export const areAllChildrenHidden = (children) => {
+  const visibleChildren = filter(children, (col) => !col.isHidden);
+  return isEmpty(visibleChildren);
+};
